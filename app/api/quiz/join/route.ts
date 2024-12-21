@@ -11,24 +11,22 @@ if (!supabaseUrl || !supabaseKey) {
 
 const supabase = createClient<Database>(supabaseUrl, supabaseKey)
 
-export async function GET(req: NextRequest) {
-  const searchParams = req.nextUrl.searchParams
-  const quizId = searchParams.get('quizId')
+export async function POST(req: NextRequest) {
+  const { quizId, playerName } = await req.json()
 
-  if (!quizId) {
-    return NextResponse.json({ error: 'Quiz ID is required' }, { status: 400 })
+  if (!quizId || !playerName) {
+    return NextResponse.json({ error: 'Quiz ID and player name are required' }, { status: 400 })
   }
 
   const { data, error } = await supabase
-    .from('quiz_participants')
-    .select('user_id, score')
-    .eq('quiz_id', quizId)
-    .order('score', { ascending: false })
-    .limit(10)
+    .from('players')
+    .insert({ quiz_id: quizId, name: playerName, score: 0 })
+    .select()
+    .single()
 
   if (error) {
-    console.error('Error fetching leaderboard:', error)
-    return NextResponse.json({ error: 'Failed to fetch leaderboard' }, { status: 500 })
+    console.error('Error joining quiz:', error)
+    return NextResponse.json({ error: 'Failed to join quiz' }, { status: 500 })
   }
 
   return NextResponse.json(data)
