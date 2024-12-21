@@ -12,6 +12,7 @@ import {
   CardTitle,
 } from "@/app/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
+import CountdownTimer from "@/app/components/CountdownTimer";
 import { Database } from "@/types/supabase";
 import { Badge } from "@/app/components/ui/badge";
 
@@ -153,8 +154,10 @@ export default function PlayerView({ quizId, playerId }: PlayerViewProps) {
         .from("players")
         .update({
           last_answer_time: Date.now(),
-          score: player.score + (selectedAnswer === currentQuestion.correct_answer ? 1 : 0),
-         })
+          score:
+            player.score +
+            (selectedAnswer === currentQuestion.correct_answer ? 1 : 0),
+        })
         .eq("id", playerId);
     }
   };
@@ -163,7 +166,7 @@ export default function PlayerView({ quizId, playerId }: PlayerViewProps) {
 
   return (
     <div className="space-y-6">
-      <Card>
+      <Card className="bg-gray-100 dark:bg-gray-800">
         <CardHeader>
           <CardTitle>{quiz.title}</CardTitle>
         </CardHeader>
@@ -174,7 +177,7 @@ export default function PlayerView({ quizId, playerId }: PlayerViewProps) {
       </Card>
 
       {quiz.status === "waiting" && (
-        <Card>
+        <Card className="bg-yellow-100 dark:bg-yellow-800">
           <CardHeader>
             <CardTitle>Waiting for Quiz to Start</CardTitle>
           </CardHeader>
@@ -185,67 +188,80 @@ export default function PlayerView({ quizId, playerId }: PlayerViewProps) {
       )}
 
       {quiz.status === "active" && currentQuestion && !answerSubmitted && (
-        <Card>
-          <CardHeader>
-            <CardTitle>Current Question</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="mb-4">{currentQuestion.question_text}</p>
-            <div className="grid grid-cols-2 gap-2">
-              {Array.isArray(currentQuestion.options) ? (
-              currentQuestion.options.map((option, index) => (
-                <Button
-                key={index}
-                onClick={() => setSelectedAnswer(option)}
-                variant={selectedAnswer === option ? "default" : "outline"}
-                className={`w-full justify-start 
-                  ${
-                    selectedAnswer === option
-                    ? index === 0
-                      ? "bg-red-500 dark:bg-red-900"
-                      : index === 1
-                      ? "bg-blue-500 dark:bg-blue-900"
-                      : index === 2
-                        ? "bg-orange-500 dark:bg-orange-900"
-                        : index === 3
-                        ? "bg-green-500 dark:bg-green-900"
-                        : "bg-gray-500 dark:bg-gray-800"
-                    : index === 0
-                      ? "bg-red-100 dark:bg-red-500"
-                      : index === 1
-                      ? "bg-blue-100 dark:bg-blue-500"
-                      : index === 2
-                        ? "bg-orange-100 dark:bg-orange-500"
-                        : index === 3
+        <>
+          <CountdownTimer
+            timeLimit={currentQuestion.time_limit}
+            onFinish={() => {
+              setAnswerSubmitted(true);
+              setAnswerResult("incorrect");
+            }}
+          />
+          <Card className="bg-violet-50 dark:bg-violet-400">
+            <CardHeader>
+              <CardTitle>Current Question</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-lg font-semibold mb-4">
+                {currentQuestion.question_text}
+              </p>
+              <div className="grid grid-cols-2 gap-2">
+                {Array.isArray(currentQuestion.options) ? (
+                  currentQuestion.options.map((option, index) => (
+                    <Button
+                      key={index}
+                      onClick={() => setSelectedAnswer(option)}
+                      variant={
+                        selectedAnswer === option ? "default" : "outline"
+                      }
+                      className={`w-full justify-start 
+            ${
+              selectedAnswer === option
+                ? index === 0
+                  ? "bg-red-500 dark:bg-red-900 text-white"
+                  : index === 1
+                    ? "bg-blue-500 dark:bg-blue-900 text-white"
+                    : index === 2
+                      ? "bg-orange-500 dark:bg-orange-900 text-white"
+                      : index === 3
+                        ? "bg-green-500 dark:bg-green-900 text-white"
+                        : "bg-gray-500 dark:bg-gray-800 text-white"
+                : index === 0
+                  ? "bg-red-100 dark:bg-red-500"
+                  : index === 1
+                    ? "bg-blue-100 dark:bg-blue-500"
+                    : index === 2
+                      ? "bg-orange-100 dark:bg-orange-500"
+                      : index === 3
                         ? "bg-green-100 dark:bg-green-500"
                         : "bg-gray-100 dark:bg-gray-500"
-                  }
-                  `}
-                >
-                <Badge variant="outline" className="mr-2">
-                  {String.fromCharCode(65 + index)}
-                </Badge>
-                {option}
-                </Button>
-              ))
-              ) : (
-              <p>No options available for this question.</p>
-              )}
-            </div>
-            <Button
-              onClick={submitAnswer}
-              disabled={selectedAnswer === null}
-              className="mt-4 w-full"
-              variant={"default"}
-            >
-              Submit Answer
-            </Button>
-          </CardContent>
-        </Card>
+            }
+            `}
+                    >
+                      <Badge variant="outline" className="mr-2">
+                        {String.fromCharCode(65 + index)}
+                      </Badge>
+                      {option}
+                    </Button>
+                  ))
+                ) : (
+                  <p>No options available for this question.</p>
+                )}
+              </div>
+              <Button
+                onClick={submitAnswer}
+                disabled={selectedAnswer === null}
+                className="mt-4 w-full bg-gray-600 hover:bg-gray-900 text-white"
+                variant={"default"}
+              >
+                Submit Answer
+              </Button>
+            </CardContent>
+          </Card>
+        </>
       )}
 
       {quiz.status === "active" && answerSubmitted && (
-        <Card>
+        <Card className="bg-green-100 dark:bg-green-800">
           <CardHeader>
             <CardTitle>Answer Submitted</CardTitle>
           </CardHeader>
@@ -265,7 +281,7 @@ export default function PlayerView({ quizId, playerId }: PlayerViewProps) {
       )}
 
       {quiz.status === "finished" && (
-        <Card>
+        <Card className="bg-purple-100 dark:bg-purple-800">
           <CardHeader>
             <CardTitle>Quiz Finished</CardTitle>
           </CardHeader>

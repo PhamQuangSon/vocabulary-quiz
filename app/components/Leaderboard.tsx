@@ -70,7 +70,7 @@ export default function Leaderboard({ quizId, currentPlayerId }: LeaderboardProp
   }, [quizId, supabase])
 
   return (
-    <Card>
+    <Card className="bg-green-100 dark:bg-green-800">
       <CardHeader>
         <CardTitle>Leaderboard</CardTitle>
       </CardHeader>

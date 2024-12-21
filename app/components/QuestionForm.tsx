@@ -54,7 +54,7 @@ export function QuestionForm({ quizId, onQuestionAdded }: QuestionFormProps) {
         quiz_id: quizId,
         question_text: questionText,
         options,
-        correct_option_index: correctOptionIndex,
+        correct_answer: options[correctOptionIndex],
         time_limit: timeLimit,
       })
 
@@ -111,6 +111,7 @@ export function QuestionForm({ quizId, onQuestionAdded }: QuestionFormProps) {
             <Button
               type="button"
               variant={correctOptionIndex === index ? 'default' : 'outline'}
+              className={`${correctOptionIndex === index ? "bg-gray-600 hover:bg-gray-900 text-white" : ""} `}
               onClick={() => setCorrectOptionIndex(index)}
             >
               Correct
@@ -122,7 +123,7 @@ export function QuestionForm({ quizId, onQuestionAdded }: QuestionFormProps) {
             )}
           </div>
         ))}
-        <Button type="button" variant="outline" onClick={addOption}>
+        <Button type="button" variant="outline" onClick={addOption} className="bg-blue-500 hover:bg-blue-600 text-white mr-2">
           <PlusCircle className="h-4 w-4 mr-2" /> Add Option
         </Button>
       </div>
@@ -138,7 +139,7 @@ export function QuestionForm({ quizId, onQuestionAdded }: QuestionFormProps) {
           required
         />
       </div>
-      <Button type="submit" disabled={loading}>
+      <Button type="submit" disabled={loading} className="bg-gray-600 hover:bg-gray-900 text-white">
         {loading ? 'Adding...' : 'Add Question'}
       </Button>
     </form>
