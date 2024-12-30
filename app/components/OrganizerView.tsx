@@ -52,15 +52,15 @@ export default function OrganizerView({ quizId }: OrganizerViewProps) {
 
       if (quizResponse.error)
         console.error("Error fetching quiz:", quizResponse.error);
-      else setQuiz(quizResponse.data);
+      else setQuiz(quizResponse.data as Quiz);
 
       if (questionsResponse.error)
         console.error("Error fetching questions:", questionsResponse.error);
-      else setQuestions(questionsResponse.data);
+      else setQuestions(questionsResponse.data as Question[]);
 
       if (playersResponse.error)
         console.error("Error fetching players:", playersResponse.error);
-      else setPlayers(playersResponse.data);
+      else setPlayers(playersResponse.data as Player[]);
     };
 
     fetchQuizData();
