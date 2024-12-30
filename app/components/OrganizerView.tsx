@@ -11,7 +11,7 @@ import {
   CardDescription,
 } from "@/app/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { Database } from "@/types/supabase";
+import type { Database } from "@/types/supabase";
 import { QuestionForm } from "@/app/components/QuestionForm";
 import { Badge } from "@/app/components/ui/badge";
 import { Separator } from "@/app/components/ui/separator";
@@ -243,7 +243,7 @@ export default function OrganizerView({ quizId }: OrganizerViewProps) {
       )}
 
       {currentQuestion && (
-         <Card className="bg-violet-50 dark:bg-violet-400">
+        <Card className="bg-violet-50 dark:bg-violet-400">
           <CardHeader>
             <CardTitle>Current Question</CardTitle>
           </CardHeader>
@@ -314,7 +314,7 @@ export default function OrganizerView({ quizId }: OrganizerViewProps) {
           <CardContent>
             {questions.length === 0 ? (
               <p>
-                No questions added yet. Use the 'Add Question' button to create
+                No questions added yet. Use the &apos;Add Question&apos; button to create
                 questions.
               </p>
             ) : (

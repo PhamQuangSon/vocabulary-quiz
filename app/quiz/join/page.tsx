@@ -1,80 +1,86 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
-import { Button } from '@/app/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/app/components/ui/card'
-import { Input } from '@/app/components/ui/input'
-import { Label } from '@/app/components/ui/label'
-import { useToast } from '@/hooks/use-toast'
-import { useSupabase } from '@/app/supabase-provider'
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { Button } from "@/app/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/app/components/ui/card";
+import { Input } from "@/app/components/ui/input";
+import { Label } from "@/app/components/ui/label";
+import { useToast } from "@/hooks/use-toast";
+import { useSupabase } from "@/app/supabase-provider";
 
 export default function JoinQuiz() {
-  const [quizId, setQuizId] = useState('')
-  const [name, setName] = useState('')
-  const [loading, setLoading] = useState(false)
-  const router = useRouter()
-  const supabase = useSupabase()
-  const { toast } = useToast()
+  const [quizId, setQuizId] = useState("");
+  const [name, setName] = useState("");
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
+  const supabase = useSupabase();
+  const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setLoading(true)
+    e.preventDefault();
+    setLoading(true);
 
     try {
       // Check if quiz exists and is waiting for players
       const { data: quiz, error: quizError } = await supabase
-        .from('quizzes')
+        .from("quizzes")
         .select()
-        .eq('id', quizId)
-        .single()
+        .eq("id", quizId)
+        .single();
 
       if (quizError) {
-        console.error('Error fetching quiz:', quizError)
-        throw new Error('Quiz not found')
+        console.error("Error fetching quiz:", quizError);
+        throw new Error("Quiz not found");
       }
 
-      if (quiz.status !== 'waiting') {
-        throw new Error('Quiz has already started')
+      if (quiz.status !== "waiting") {
+        throw new Error("Quiz has already started");
       }
 
       // Join the quiz
       const { data: player, error: playerError } = await supabase
-        .from('players')
+        .from("players")
         .insert({
           name,
           quiz_id: quizId,
-          score: 0
+          score: 0,
         })
         .select()
-        .single()
+        .single();
 
       if (playerError) {
-        console.error('Error joining quiz:', playerError)
-        throw playerError
+        console.error("Error joining quiz:", playerError);
+        throw playerError;
       }
 
       if (!player) {
-        throw new Error('Failed to create player')
+        throw new Error("Failed to create player");
       }
 
       toast({
-        title: 'Joined quiz successfully!',
-        description: 'You will be redirected to the quiz page.'
-      })
+        title: "Joined quiz successfully!",
+        description: "You will be redirected to the quiz page.",
+      });
 
-      router.push(`/quiz/${quizId}/player/${player.id}`)
+      router.push(`/quiz/${quizId}/player/${player.id}`);
     } catch (error) {
-      console.error('Error joining quiz:', error)
+      console.error("Error joining quiz:", error);
       toast({
-        title: 'Error joining quiz',
-        description: error instanceof Error ? error.message : 'Please try again later.',
-        variant: 'destructive'
-      })
+        title: "Error joining quiz",
+        description:
+          error instanceof Error ? error.message : "Please try again later.",
+        variant: "destructive",
+      });
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -106,12 +112,12 @@ export default function JoinQuiz() {
                 />
               </div>
               <Button type="submit" className="w-full" disabled={loading}>
-                {loading ? 'Joining...' : 'Join Quiz'}
+                {loading ? "Joining..." : "Join Quiz"}
               </Button>
             </form>
           </CardContent>
         </Card>
       </div>
     </div>
-  )
+  );
 }

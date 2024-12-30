@@ -1,6 +1,12 @@
-import { Button } from "@/app/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/app/components/ui/card"
-import Link from "next/link"
+import { Button } from "@/app/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/app/components/ui/card";
+import Link from "next/link";
 
 export default function Home() {
   return (
@@ -8,7 +14,9 @@ export default function Home() {
       <div className="max-w-2xl mx-auto space-y-8">
         <div className="text-center">
           <h1 className="text-4xl font-bold mb-4">Welcome to Elsa Quiz</h1>
-          <p className="text-lg text-gray-600">Create or join a quiz to get started</p>
+          <p className="text-lg text-gray-600">
+            Create or join a quiz to get started
+          </p>
         </div>
 
         <div className="grid gap-6 md:grid-cols-2">
@@ -38,6 +46,5 @@ export default function Home() {
         </div>
       </div>
     </main>
-  )
+  );
 }
-
