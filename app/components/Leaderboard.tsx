@@ -30,7 +30,7 @@ export default function Leaderboard({ quizId, currentPlayerId }: LeaderboardProp
       if (error) {
         console.error('Error fetching players:', error)
       } else {
-        setPlayers(data)
+        setPlayers(data as Player[])
       }
     }
 

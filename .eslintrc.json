@@ -43,8 +43,6 @@
     "@typescript-eslint/indent": 0,
     "@typescript-eslint/no-explicit-any": 2,
     "@typescript-eslint/explicit-module-boundary-types": 0,
-    "no-return-await": "off",
-    "@typescript-eslint/return-await": "error",
     "no-use-before-define": "off",
     "@typescript-eslint/no-use-before-define": "off",
     "react/display-name": "off",
